@@ -1,0 +1,10 @@
+# .gitignore
+.env
+__pycache__/
+*.pyc
+*.log
+feedback.txt
+amvera.yml
+bot.log
+.venv
+venv

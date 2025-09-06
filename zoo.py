@@ -3,12 +3,17 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeybo
 import logging
 import urllib.parse
 import os
-from config_zoo import API_TOKEN
 from utils_zoo import AnimalQuiz
 import random
+import time
+from dotenv import load_dotenv
+from telebot import apihelper
 
+load_dotenv()
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+API_TOKEN = os.getenv('API_TOKEN')
+
+logging.basicConfig(filename='bot.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class TotemAnimalBot:
     def __init__(self, token):
@@ -20,6 +25,26 @@ class TotemAnimalBot:
     def setup_handlers(self):
         @self.bot.message_handler(commands=['start'])
         def send_welcome(message):
+            self.user_data[message.chat.id] = {'answers': [], 'scores': []}
+
+            welcome_text = (
+                "🐾 Добро пожаловать в официальный бот Московского зоопарка! 🐾\n\n"
+                "Я помогу вам:\n"
+                "• Определить ваше тотемное животное через увлекательную викторину\n"
+                "• Узнать о программе опекунства над животными\n"
+                "• Связаться с сотрудниками зоопарка\n"
+                "• Оставить отзыв о вашем опыте\n\n"
+                "Выберите действие из меню ниже или используйте команды:\n"
+                "/start - Главное меню\n"
+                "/help - Справка по командам\n"
+                "/quiz - Начать викторину\n"
+                "/guardianship - Информация об опекунстве\n"
+                "/contact - Контакты зоопарка\n"
+                "/feedback - Оставить отзыв\n\n"
+                "Начните с викторины, чтобы узнать ваше тотемное животное! 🦁"
+            )
+
+            self.bot.send_message(message.chat.id, welcome_text)
             self.user_data[message.chat.id] = {'answers': [], 'scores': []}
             self.send_main_menu(message.chat.id)
 
@@ -69,6 +94,10 @@ class TotemAnimalBot:
                     self.collect_feedback(message.chat.id)
             except Exception as e:
                 logging.error(f"Error handling main menu: {e}")
+
+        @self.bot.message_handler(commands=['quiz'])
+        def quiz_command(message):
+            self.start_quiz(message.chat.id)
 
     def handle_send_message(self, call):
         self.bot.send_message(call.message.chat.id, "Введите ваше сообщение для отправки:")
@@ -165,13 +194,14 @@ class TotemAnimalBot:
 
     def send_help(self, chat_id):
         help_text = (
-            "Добро пожаловать в бот Московского зоопарка!\n"
-            "Команды бота:\n"
-            "/start - Главное меню\n"
-            "/help - Доступные команды\n"
-            "/feedback - Оставить отзыв\n"
-            "/contact - Связаться с зоопарком\n"
-            "/guardianship - Узнать об опекунстве подробнее\n"
+            "🐾 Справка по командам бота Московского зоопарка:\n\n"
+            "/start - Главное меню и приветствие\n"
+            "/help - Показать эту справку\n"
+            "/quiz - Начать викторину для определения тотемного животного\n"
+            "/guardianship - Узнать об опекунстве животных\n"
+            "/contact - Контакты зоопарка\n"
+            "/feedback - Оставить отзыв о работе бота\n\n"
+            "Вы также можете использовать кнопки меню для навигации!"
         )
         self.bot.send_message(chat_id, help_text)
 
@@ -220,7 +250,12 @@ class TotemAnimalBot:
             self.bot.polling(none_stop=True)
         except Exception as e:
             logging.error(f"Ошибка в работе бота: {e}")
+            time.sleep(5)  # Задержка перед повторным запуском
             self.run()
+
+#Удаляем вебхук
+bot = telebot.TeleBot(API_TOKEN)
+bot.delete_webhook()
 
 if __name__ == "__main__":
     bot = TotemAnimalBot(API_TOKEN)

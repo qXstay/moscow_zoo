@@ -139,18 +139,18 @@ class AnimalQuiz:
 
     def get_animal_image(self, animal_name):
         animal_images = {
-            "Фенек": "C:/Users/user/projects/zoo/Fenek.jpg",
-            "Ушастая сова": "C:/Users/user/projects/zoo/Sova.jpg",
-            "Капибара": "C:/Users/user/projects/zoo/Capybara.webp",
-            "Азиатский слон": "C:/Users/user/projects/zoo/Asian.jpg",
-            "Европейский волк": "C:/Users/user/projects/zoo/Wolf.jpg",
-            "Дальневосточный леопард": "C:/Users/user/projects/zoo/Leopard.jpg",
-            "Степной орёл": "C:/Users/user/projects/zoo/Orel.jpg",
-            "Кот Манул": "C:/Users/user/projects/zoo/Manul.jpg",
-            "Белый медведь": "C:/Users/user/projects/zoo/Medved.jpg",
-            "Фиолетовый турако": "C:/Users/user/projects/zoo/Turako.jpg",
-            "Уссурийская харза": "C:/Users/user/projects/zoo/Harza.jpg",
-            "Даман брюса": "C:/Users/user/projects/zoo/Daman.jpg"
+            "Фенек": "zoo/Fenek.jpg",
+            "Ушастая сова": "zoo/Sova.jpg",
+            "Капибара": "zoo/Capybara.webp",
+            "Азиатский слон": "zoo/Asian.jpg",
+            "Европейский волк": "zoo/Wolf.jpg",
+            "Дальневосточный леопард": "zoo/Leopard.jpg",
+            "Степной орёл": "zoo/Orel.jpg",
+            "Кот Манул": "zoo/Manul.jpg",
+            "Белый медведь": "zoo/Medved.jpg",
+            "Фиолетовый турако": "zoo/Turako.jpg",
+            "Уссурийская харза": "zoo/Harza.jpg",
+            "Даман брюса": "zoo/Daman.jpg"
         }
         return animal_images.get(animal_name, None)
 
@@ -226,4 +226,3 @@ class AnimalQuiz:
         }
 
         return descriptions.get(animal_name, "Описание недоступно.")
-
